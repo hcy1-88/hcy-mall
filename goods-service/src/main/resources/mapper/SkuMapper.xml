@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hcy.mapper.SkuMapper">
+    <resultMap id="rm" type="com.hcy.entity.Sku">
+        <result property="skuId" column="sku_id"/>
+        <result property="goodsId" column="goods_id"/>
+        <result property="stock" column="stock"/>
+        <result property="sku" column="sku"/>
+        <result property="status" column="status"/>
+        <result property="sellerId" column="seller_id"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+        <association property="goods" javaType="com.hcy.entity.Goods">
+            <result property="id" column="goods_id"/>
+            <result property="goodsName" column="goods_name"/>
+            <result property="originalPrice" column="original_price"/>
+            <result property="nowPrice" column="now_price"/>
+            <result property="brand" column="brand"/>
+            <result property="imgUrl" column="img_url"/>
+        </association>
+        <association property="seller" javaType="com.hcy.entity.Seller">
+            <result property="id" column="seller_id"/>
+            <result property="name" column="name"/>
+            <result property="address" column="address"/>
+            <result property="email" column="email"/>
+            <result property="phone" column="phone"/>
+        </association>
+    </resultMap>
+    <select id="findAllSku" resultMap="rm" >
+        select
+            a.goods_name,a.original_price,a.now_price,a.brand,a.img_url,
+            b.goods_id,b.sku_id,b.sku,b.stock,b.status,b.seller_id,
+            b.create_time,b.update_time,
+            c.name,c.address,c.email,c.password,c.phone
+
+        from hcy_goods a right join hcy_sku b
+                 on a.id = b.goods_id left join hcy_seller c
+                         on  b.seller_id = c.id;
+    </select>
+    <select id="findSkuBySellerId" resultMap="rm">
+        select g.goods_name,g.original_price,g.now_price,g.brand,g.img_url,
+               s.goods_id,s.sku_id,s.sku,s.stock,s.status
+        from hcy_goods g left join hcy_sku s
+            on g.id = s.goods_id
+        where s.seller_id = #{sellerId}
+    </select>
+    <select id="searchGoods" resultMap="rm">
+        select a.id goods_id,a.img_url,a.now_price,a.goods_name,a.brand,c.name,b.seller_id,count(distinct seller_id) from hcy_goods a, hcy_sku b,hcy_seller c
+        where a.id = b.goods_id and b.seller_id = c.id and b.status = 1 and a.goods_name like '%${kw}%' group by seller_id
+    </select>
+    <select id="findSkuByGoodsId" resultMap="rm">
+        select s.sku_id,s.seller_id,s.goods_id,g.goods_name,g.original_price,g.now_price,s.sku,s.stock
+        from hcy_goods g, hcy_sku s where g.id = s.goods_id and g.id = #{goodsId};
+    </select>
+    <select id="findSkuForConfirmOrder" resultMap="rm">
+        select g.goods_name,g.now_price,g.img_url,s.sku,s.goods_id from hcy_goods g,hcy_sku s
+        where s.sku_id = #{skuId} and s.goods_id = g.id
+    </select>
+</mapper>

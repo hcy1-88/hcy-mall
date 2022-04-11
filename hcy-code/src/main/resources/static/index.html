@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="./css/bootstrap.min.css">
+    <script src="./js/axios.min.js"></script>
+    <script src="./js/jquery-3.6.0.min.js"></script>
+    <script src="./js/bootstrap.min.js"></script>
+    <script>
+        function code(){
+            let project = $("#project").val();
+            console.log(project)
+            let module= $("#module").val();
+            let tables = $("#table").val();
+            axios.get("http://localhost:8079/gen",{
+                params: {
+                    projectName: project,
+                    moduleName: module,
+                    tableName: tables
+                }
+            }).then(res => {
+                console.log(res.data)
+                if (res.data == "ok"){
+                    alert("老弟，搞定！");
+                    return;
+                }else {
+                    alert(res.data);
+                }
+            })
+        }
+    </script>
+</head>
+<body>
+<div class="container">
+    <br>
+    <form class="form-horizontal">
+        <div class="form-group">
+            <label for="project" class="col-sm-2 control-label">工程名：</label>
+            <div class="col-sm-10">
+                <input id="project" type="text" class="form-control" name="projectName" placeholder="请输入工程名"/>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="module" class="col-sm-2 control-label">模块名：</label>
+            <div class="col-sm-10">
+                <input id="module" type="text" class="form-control" name="projectName" placeholder="请输入模块名"/>
+            </div>
+        </div>
+
+
+        <div class="form-group">
+            <label for="table" class="col-sm-2 control-label">表名：</label>
+            <div class="col-sm-10">
+                <input id="table" type="text" class="form-control" name="projectName" placeholder="请输入表名，多张表用英文逗号隔开！"/>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+                <button id="doCode" onclick="code()" type="submit" data-loading-text="Loading..." class="btn btn-info">生成代码</button>
+            </div>
+        </div>
+    </form>
+</div>
+</body>
+</html>

@@ -1,0 +1,19 @@
+spring:
+  cloud:
+    nacos:
+      username: nacos
+      password: nacos
+      config:
+        server-addr: 127.0.0.1:8848 #指定配置中心的服务地址
+        namespace: 1ed0898b-5562-486d-89aa-31198b46e3f2 #指定namespace
+        group: dev #指定group
+        prefix: double12-service # 指定配置文件前缀
+        # 检索文件公式：${prefix}-${spring.profiles.active}.${file-extension}，与nacos中的 Data-Id 一致
+        file-extension: yml
+        # 使用公共配置文件的配置
+        shared-configs[0]:
+          data-id: common.yml
+          group: dev
+          refresh: true
+  profiles:
+    active: dev # 指定 环境

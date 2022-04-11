@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hcy.mapper.GoodsMapper">
+
+    <select id="getAllGoods" resultType="com.hcy.entity.Goods">
+        select * from hcy_goods
+    </select>
+    <select id="findImgUrlByGoodsId" resultType="java.lang.String">
+        select img_url from hcy_goods where id = #{gid}
+    </select>
+</mapper>

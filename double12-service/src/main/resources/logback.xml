@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<configuration xmlns="http://ch.qos.logback/xml/nx/logback"
+               xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+               xsi:schemaLocation="http://ch.qos.logback/xml/ns/logback">
+    <appender name="consoleAppender" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{yyyy年MM月dd日 HH:mm:ss.SSS} 类：%class 行号：%line 等级：%-5level - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <springProperty scope="context" name="APPLICATION_NAME" source="spring.application.name"/>
+    <property name="APP_NAME" value="${APPLICATION_NAME:-.}"/>
+    <property name="Log_Path" value="F:/my_projects/hcymall/logs"></property>
+
+    <appender name="rollingFile" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <encoder>
+            <pattern>%d{yyyy年MM月dd日 HH:mm:ss.SSS} 类：%class 行号：%line 线程：[%thread] 等级：%-5level - %msg%n</pattern>
+        </encoder>
+        <append>true</append>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!--每天都会产生一个日志文件-->
+            <fileNamePattern>${Log_Path}/${APP_NAME}/log-error_%d{yyyy-MM-dd}.log</fileNamePattern>
+            <!--只保留最近3个日志文件-->
+            <maxHistory>3</maxHistory>
+            <!--所有日志文件加起来 大小若超过 5GB，则删除最旧的日志文件-->
+            <totalSizeCap>5GB</totalSizeCap>
+        </rollingPolicy>
+    </appender>
+    <root level="INFO">
+        <appender-ref ref="consoleAppender"/>
+    </root>
+    <logger name="com.hcy" level="ERROR">
+        <appender-ref ref="rollingFile"/>
+    </logger>
+</configuration>
